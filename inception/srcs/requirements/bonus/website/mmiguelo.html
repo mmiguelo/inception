@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parallax Resume</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  /* Sidebar styling */
+  .sidebar-item {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.5);
+    transition: width 0.3s, border-radius 0.3s, background-color 0.3s;
+    padding-left: 0.85rem;
+    position: relative;
+    cursor: pointer;
+  }
+  .sidebar-item i {
+    flex-shrink: 0;
+    z-index: 10;
+    color: white;
+    font-size: 1.25rem;
+    transition: transform 0.3s;
+  }
+  .sidebar-item span {
+    position: absolute;
+    left: 3rem;
+    opacity: 0;
+    white-space: nowrap;
+    color: white;
+    font-weight: 500;
+    transition: opacity 0.3s 0.1s, left 0.3s 0.1s;
+  }
+  .sidebar-item:hover {
+    width: 11rem;
+    border-radius: 1.5rem;
+    background-color: rgba(31,41,55,0.9);
+  }
+  .sidebar-item:hover span {
+    opacity: 1;
+    left: 4rem;
+  }
+  .sidebar-item:hover i {
+    transform: scale(1.2);
+  }
+
+  /* Parallax sections */
+  .parallax {
+    height: 80vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .parallax-content {
+    background: rgba(0,0,0,0.5);
+    padding: 2rem;
+    border-radius: 1rem;
+    color: white;
+    text-align: center;
+    max-width: 800px;
+  }
+
+  /* Spacer section between images */
+  .spacer {
+    height: 25vh;
+    background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.15),
+    rgba(255,255,255,0.9)
+    );
+  }
+
+  /* Social icons */
+  .social {
+    width: 40px;
+    margin: 0 6px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .social:hover {
+    transform: scale(1.1);
+  }
+</style>
+</head>
+<body class="flex">
+
+  <!-- Sidebar -->
+  <nav class="fixed left-0 top-0 h-screen flex flex-col gap-4 p-4 z-50 bg-transparent backdrop-blur-sm">
+    <a href="#home" class="sidebar-item"><i class="fa-solid fa-user"></i><span>Home</span></a>
+    <a href="#academic" class="sidebar-item"><i class="fa-solid fa-graduation-cap"></i><span>Academic</span></a>
+    <a href="#professional" class="sidebar-item"><i class="fa-solid fa-briefcase"></i><span>Professional</span></a>
+    <a href="#contact" class="sidebar-item"><i class="fa-solid fa-envelope"></i><span>Contact</span></a>
+  </nav>
+
+  <!-- Main content -->
+  <div class="ml-16 flex-1">
+
+    <!-- Home / Hero -->
+    <section id="home" class="parallax" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80');">
+      <div class="parallax-content">
+        <img src="https://raw.githubusercontent.com/mmiguelo/discovery_piscine/refs/heads/main/rush/images/marco.png?token=GHSAT0AAAAAADSY3T6CJ7P2E6ZPYT75ZODI2LKGPUA" alt="Profile Photo" class="rounded-full w-40 h-40 mb-4 border-4 border-gray-300 shadow-lg mx-auto">
+        <h1 class="text-3xl font-bold mb-2">Marco Miguelote</h1>
+        <h2 class="text-xl mb-4">Wanabe Full Stack Develope and Embedded systems programmer</h2>
+        <p>Hi! I am Marco, a passionate developer specializing C and C++. I enjoy building clean and user-friendly applications.</p>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+    <!-- Academic -->
+    <section id="academic" class="parallax" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1950&q=80');">
+      <div class="parallax-content text-left">
+        <h2 class="text-2xl font-bold mb-4">Academic Experience</h2>
+        <ul class="list-disc list-inside mb-4">
+          <li>BSc in Management & Administration – UTAD</li>
+          <li>Post-Graduation in Hotel Management – Porto Business School</li>
+        </ul>
+        <h2 class="text-2xl font-bold mb-4">Skills</h2>
+        <ul class="list-disc list-inside">
+          <li>Frontend Development: HTML, CSS, JavaScript, TailwindCSS</li>
+          <li>Backend Development: still learning</li>
+          <li>Version Control: Git & GitHub</li>
+        </ul>
+      </div>
+    </section>
+    <div class="spacer"></div>
+
+    <!-- Professional -->
+    <section id="professional" class="parallax" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1950&q=80');">
+      <div class="parallax-content text-left">
+        <h2 class="text-2xl font-bold mb-4">Professional Experience</h2>
+        <ul class="list-disc list-inside">
+          <li>Head of Purchasing Department at FeelViana Hotel</li>
+          <li>Head of Purchasing Department at Vila Gale Braga Hotel</li>
+          <li>Head of Finance Department at Fernweh Global</li>
+          <li>Cohead of HR Department at Fernweh Global</li>
+        </ul>
+      </div>
+    </section>
+    <div class="spacer"></div>
+
+    <!-- Contact -->
+    <section id="contact" class="parallax" style="background-image: url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1950&q=80');">
+      <div class="parallax-content text-center">
+        <h2 class="text-2xl font-bold mb-4">Contact</h2>
+        <div class="flex justify-center items-center gap-6">
+          <a href="https://www.linkedin.com/in/marco-santos-602668101" target="_blank"><img class="social" src="https://raw.githubusercontent.com/tandpfun/skill-icons/65dea6c4eaca7da319e552c09f4cf5a9a8dab2c8/icons/LinkedIn.svg" alt="LinkedIn"></a>
+          <a href="https://www.github.com/mmiguelo" target="_blank"><img class="social" src="https://raw.githubusercontent.com/tandpfun/skill-icons/65dea6c4eaca7da319e552c09f4cf5a9a8dab2c8/icons/Github-Dark.svg" alt="GitHub"></a>
+          <a href="https://www.instagram.com/peoplecallmemiguelote" target="_blank"><img class="social" src="https://raw.githubusercontent.com/tandpfun/skill-icons/65dea6c4eaca7da319e552c09f4cf5a9a8dab2c8/icons/Instagram.svg" alt="Instagram"></a>
+          <a href="https://www.discord.com/users/558375144213577728" target="_blank"><img class="social" src="https://raw.githubusercontent.com/tandpfun/skill-icons/65dea6c4eaca7da319e552c09f4cf5a9a8dab2c8/icons/Discord.svg" alt="Discord"></a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
