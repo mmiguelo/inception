@@ -1,5 +1,10 @@
 services:
 
+  # ───────── MANDATORY ─────────
+
+  # ────────── MARIADB ──────────
+
+  # this is the only container that does not depend on the others, so its the first to be created
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb/
@@ -12,6 +17,9 @@ services:
     env_file:
       - .env
   
+  # ────────── WORDPRESS ──────────
+
+  # this is the second container to be created, it depends on the mariadb container
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress/
@@ -25,7 +33,12 @@ services:
       - .env
     depends_on:
       - mariadb
+  
+  # ────────── NGINX ──────────
 
+  # this is the last container to be created, it depends on the wordpress container
+  # it uses build arguments to create a self-signed SSL certificate for HTTPS
+  # those arguments are defined in the .env file
   nginx:
     container_name: nginx
     build:
@@ -52,7 +65,199 @@ services:
       - .env
     depends_on:
       - wordpress
+
+  # ───────── BONUS ─────────
+
+  #adminer 
+  # a database management tool
+  # it depends on the mariadb container
+  # it uses a custom build located in requirements/bonus/adminer/
+  # the image is tagged as adminer:42
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  adminer:
+    container_name: adminer
+    build: ./requirements/bonus/adminer/
+    image: adminer:42
+    depends_on:
+      - mariadb
+    ports:
+      - "600:80" # Adminer usually listens on port 80, mapping to host port 600
+    networks:
+      - all
+    restart: always # Ensure Adminer is always available
+    profiles:
+      - bonus
+
+  #ftp
+  # a ftp server to manage wordpress files (stands for file transfer protocol)
+  # it depends on the wordpress container
+  # it uses a custom build located in requirements/bonus/ftp/
+  # the image is tagged as ftp:42
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  ftp:
+    container_name: ftp
+    build: ./requirements/bonus/ftp/
+    image: ftp:42
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress_files:/var/www/inception/
+    env_file:
+      - .env
+    ports:
+      - "21:21"
+      - "20:20"
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+
+  #redis
+  # a redis server to cache wordpress data (stands for remote dictionary server)
+  # it depends on the wordpress container
+  # it uses a custom build located in requirements/bonus/redis/
+  # the image is tagged as redis:42
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  redis:
+    container_name: redis
+    build: ./requirements/bonus/redis/
+    image: redis:42
+    depends_on:
+      - wordpress
+    ports:
+      - "6379:6379"
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+
+  #website
+  # a custom website to replace the default wordpress page
+  # it depends on the nginx container
+  # it uses a custom build located in requirements/bonus/website/
+  # the image is tagged as website:42
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  website:
+    container_name: website
+    build: ./requirements/bonus/website/
+    image: website:42
+    depends_on:
+      - nginx
+    ports:
+      - "8081:80"  # Access static website at http://localhost:8081
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
   
+  #cadvisor
+  # a monitoring tool for the containers (stands for container advisor)
+  # it uses the official google/cadvisor image
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  cadvisor:
+    container_name: cadvisor
+    build: ./requirements/bonus/cadvisor/
+    image: cadvisor:42
+    depends_on:
+      - nginx
+    ports:
+      - "8080:8080"  # Mapping host port 8080 to container port 8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+
+  #cron
+  # a cron job to perform regular tasks (e.g., database/wordpress backups)
+  # it depends on mariadb and wordpress containers
+  # it uses a custom build located in requirements/bonus/cron/
+  # the image is tagged as cron:42
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  cron:
+    container_name: cron
+    build: ./requirements/bonus/cron/
+    image: cron:42
+    depends_on:
+      - mariadb
+      - wordpress
+    volumes:
+      - wordpress_files:/var/www/inception/:ro
+      - backups:/backups
+    env_file:
+      - .env
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+  
+  #kuma (Uptime Kuma)
+  # a self-hosted monitoring tool for uptime tracking
+  # it depends on the nginx container
+  # it maps port 3001 on the host to port 3001 on the container
+  # so you can access it via http://localhost:3001
+  # it uses Uptime Kuma for service monitoring
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  kuma:
+    container_name: kuma
+    build: ./requirements/bonus/kuma/
+    image: kuma:42
+    depends_on:
+      - nginx
+    ports:
+      - "3001:3001"  # Uptime Kuma default port
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+
+  #portainer
+  # a container management tool
+  # it depends on the nginx container
+  # it maps port 9000 on the host to port 9000 on the container
+  # so you can access it via http://localhost:9000
+  # it uses the official portainer/portainer-ce image
+  # it restarts always to ensure availability
+  # it is connected to the same network as the other containers
+  portainer:
+    container_name: portainer
+    build: ./requirements/bonus/portainer/
+    image: portainer:42
+    depends_on:
+      - nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - "9443:9443"
+    networks:
+      - all
+    restart: always
+    profiles:
+      - bonus
+
+# ───────── VOLUMES ─────────
+
+# keeps the data shared between the containers
+# it acts like a shared hard drive between the containers and the host machine
+# device: where the data will be stored in the host machine
 volumes:
 
   database:
@@ -68,7 +273,27 @@ volumes:
       type: none
       o: bind
       device: ~/data/wordpress_files
-  
+
+  portainer_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ~/data/portainer_data
+
+  backups:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ~/data/backups
+
+# ───────── NETWORKS ─────────
+
+# this network is used to connect the containers
+# it acts like a virtual switch between the containers
+# all is the name of the network
+# bridge is the type of the network
 networks:
   all:
     driver: bridge

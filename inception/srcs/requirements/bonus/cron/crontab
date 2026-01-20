@@ -1,0 +1,20 @@
+# Crontab for WordPress/MariaDB backups
+# Format: minute hour day month weekday command
+
+# Run backup every day at 3:00 AM
+0 3 * * * root /usr/local/bin/backup.sh >> /var/log/cron.log 2>&1
+
+# Run backup every 6 hours (optional - uncomment if needed)
+# 0 */6 * * * root /usr/local/bin/backup.sh >> /var/log/cron.log 2>&1
+
+# Run backup every 5 minutes (for testing purposes - uncomment if needed)
+# */5 * * * * root /usr/local/bin/backup.sh >> /var/log/cron.log 2>&1
+# |   | | | |
+# |   | | | |
+# |   | | | └─ Day of the week (0 - 7) (Sunday=0 or 7)
+# |   | | └─── Month (1 - 12)
+# |   | └───── Day of the month (1 - 31)
+# |   └─────── Hour (0 - 23)
+# └───────── Minute (0 - 59)
+
+# Empty line required at end of crontab

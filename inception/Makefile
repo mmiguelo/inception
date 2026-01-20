@@ -31,6 +31,8 @@ down:
 create_dir:
 	@mkdir -p ~/data/database
 	@mkdir -p ~/data/wordpress_files
+	@mkdir -p ~/data/portainer_data
+	@mkdir -p ~/data/backups
 
 
 # creates a backup of the data folder in the home directory
@@ -81,6 +83,20 @@ prepare:
 
 re: fclean all
 
+# ───────── BONUS ─────────
+
+# starts the bonus containers (includes host setup like 'up')
+bonus: create_dir
+	@sudo hostsed add 127.0.0.1 $(HOST_URL) > $(HIDE) && echo " $(HOST_ADD)"
+	@docker compose -p $(NAME) -f $(COMPOSE) --profile bonus up --build -d || (echo " $(FAIL)" && exit 1)
+	@echo " $(BONUS_UP)"
+
+# stops and removes the bonus containers (includes host removal like 'down')
+bonus-down:
+	@sudo hostsed rm 127.0.0.1 $(HOST_URL) > $(HIDE) && echo " $(HOST_RM)"
+	@docker compose -p $(NAME) -f $(COMPOSE) --profile bonus down
+	@echo " $(BONUS_DOWN)"
+
 # Customs ----------------------------------------------------------------------
 
 HIDE		= /dev/null 2>&1
@@ -116,6 +132,9 @@ DB_FLN		= $(MARK) Image $(NAME)-mariadb	$(REMOVED)
 
 BKP			= $(MARK) Backup at $(HOME)	$(CREATED)
 
+BONUS_UP	= $(MARK) $(NAME) bonus		$(EXECUTED)
+BONUS_DOWN	= $(MARK) $(NAME) bonus		$(STOPPED)
+
 # Phony -----------------------------------------------------------------------
 
-.PHONY: all up down create_dir clean fclean status backup prepare re
+.PHONY: all up down create_dir clean fclean status backup prepare re bonus bonus-down
