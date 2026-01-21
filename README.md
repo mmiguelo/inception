@@ -32,19 +32,19 @@ A Docker-based infrastructure project that sets up a complete web hosting enviro
 ### Infrastructure Diagram:
 
 ```
-                                    ┌─────────────────────────────────────────────────────────────┐
-                                    │                    Docker Network (all)                     │
-                                    │                                                             │
-┌──────────┐    HTTPS (443)    ┌────┴────┐    FastCGI (9000)    ┌───────────┐    SQL (3306)    ┌──┴───────┐
-│  Client  │ ───────────────▶  │  NGINX  │ ──────────────────▶  │ WordPress │ ───────────────▶ │ MariaDB  │
-│ Browser  │                   │   SSL   │                      │  PHP-FPM  │                  │ Database │
-└──────────┘                   └─────────┘                      └───────────┘                  └──────────┘
-                                    │                                 │                              │
-                                    │                                 │                              │
-                               ┌────┴────┐                       ┌────┴────┐                    ┌────┴────┐
-                               │ Volume  │                       │ Volume  │                    │ Volume  │
-                               │  certs  │                       │  files  │                    │   db    │
-                               └─────────┘                       └─────────┘                    └─────────┘
+                                  ┌─────────────────────────────────────────────────────────┐
+                                  │                  Docker Network (all)                   │
+                                  │                                                         │
+┌──────────┐  HTTPS (443)    ┌────┴────┐  FastCGI (9000)   ┌───────────┐  SQL (3306)   ┌────┴─────┐
+│  Client  │ ─────────────▶  │  NGINX  │ ───────────────▶  │ WordPress │ ────────────▶ │ MariaDB  │
+│ Browser  │                 │   SSL   │                   │  PHP-FPM  │               │ Database │
+└──────────┘                 └─────────┘                   └───────────┘               └──────────┘
+                                  │                              │                          │
+                                  │                              │                          │
+                             ┌────┴────┐                    ┌────┴────┐                ┌────┴────┐
+                             │ Volume  │                    │ Volume  │                │ Volume  │
+                             │  certs  │                    │  files  │                │   db    │
+                             └─────────┘                    └─────────┘                └─────────┘
 ```
 
 ---
