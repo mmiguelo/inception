@@ -316,7 +316,13 @@ docker logs <container_name>
 
 ```bash
 make fclean   # Backup and remove everything
-make          # Rebuild from scratch
+make prepare  # 
+make up       # Rebuild from scratch
+```
+or
+```
+make prepare # Remove ALL Docker resources (clean slate)
+make up      # Rebuild from scratch
 ```
 
 ---
@@ -354,6 +360,7 @@ make          # Rebuild from scratch
 │  View logs:      docker logs nginx                                  │
 │  Restart:        make down && make                                  │
 │  Full reset:     make fclean && make                                │
+│  Clen Slate:     make prepare && make                               │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -361,5 +368,3 @@ make          # Rebuild from scratch
 ---
 
 *For technical details and architecture information, see [README.md](README.md)*
-
-*For evaluation testing procedures, see [EVALUATION_GUIDE.md](EVALUATION_GUIDE.md)*
