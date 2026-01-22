@@ -13,7 +13,7 @@ A Docker-based infrastructure project that sets up a complete web hosting enviro
 - [Services Overview](#services-overview)
 - [Technical Comparisons](#technical-comparisons)
 - [Instructions](#instructions)
-- [Usage](#usage)
+- [Further Documentation](#further-documentation)
 - [Resources](#resources)
 
 ---
@@ -463,45 +463,13 @@ This provides:
 
 ---
 
-## Usage
+## Further Documentation
 
-### Accessing Services
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| WordPress | https://mmiguelo.42.fr | User: see `.env` |
-| WordPress Admin | https://mmiguelo.42.fr/wp-admin | Admin: see `.env` |
-| Adminer | http://localhost:600 | Server: `mariadb` |
-| Portainer | https://localhost:9443 | Create on first access |
-| Uptime Kuma | http://localhost:3001 | Create on first access |
-| cAdvisor | http://localhost:8080 | No auth |
-| Static Website | http://localhost:8081 | No auth |
-
-### Database Access
-
-```bash
-# Connect to MariaDB
-docker exec -it mariadb mariadb -u <DB_USER> -p<DB_PASSWORD> <DB_NAME>
-
-# Example
-docker exec -it mariadb mariadb -u theuser -pabc thedatabase
-```
-
-### Useful Commands
-
-```bash
-# View container logs
-docker logs <container_name>
-
-# Enter a container shell
-docker exec -it <container_name> bash
-
-# Check network connections
-docker network inspect inception_all
-
-# Verify SSL certificate
-echo | openssl s_client -connect mmiguelo.42.fr:443 2>/dev/null | openssl x509 -noout -text
-```
+| Document | Description |
+|----------|-------------|
+| [USER_DOC.md](USER_DOC.md) | User guide: accessing services, credentials, status checks |
+| [DEV_DOC.md](DEV_DOC.md) | Developer guide: setup, building, container management |
+| [EVALUATION_GUIDE.md](EVALUATION_GUIDE.md) | Testing procedures for 42 evaluation |
 
 ---
 

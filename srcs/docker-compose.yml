@@ -66,6 +66,10 @@ services:
     depends_on:
       - wordpress
 
+  # if you want to change the default port
+    #ports:
+    #  - '8443:443'
+
   # ───────── BONUS ─────────
 
   #adminer 
